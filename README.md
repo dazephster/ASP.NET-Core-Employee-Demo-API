@@ -39,9 +39,19 @@ Shows basic controller setup, cookie-based authentication, and Swagger integrati
    dotnet restore
    cd TalentManager
    dotnet run
+   ```
 
 2. Open http://localost:5160 or whichever port is displayed in the line similar to the one below.
+
+```bash
 info: Microsoft.Hosting.Lifetime[14]
    Now listening on: http://localhost:5160
+```
 
 3. Add /swagger to the end of the endpoint to view Swagger UI
+
+
+For laters:
+- Replace dummy login with ASP.NET Core Identity
+- Add persistence layer (EF Core + SQL Server)
+- Deploy to Azure App Service
