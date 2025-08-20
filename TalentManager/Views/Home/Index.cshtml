@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@using System.Security.Claims
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search').click(function () {
+                $('#employees').empty();
+
+                $.getJSON("/api/employees", function (data) {
+                    $.each(data, function (i, employee) {
+                        var content = "Id: " + employee.id + ", Name: " + employee.name;
+                        content = content + ", Department: " + employee.department;
+
+                        $('#employees').append($('<li/>', {text: content}));
+                    });
+                });
+            });
+
+            // Get employee by ID
+            $('#searchById').click(function () {
+                var id = $('#employeeId').val().trim();
+                if (!id) {
+                    alert("Please enter an ID");
+                    return;
+                }
+
+                $('#employees').empty();
+
+                $.getJSON("/api/employees/" + id, function (employee) {
+                    var content = "Id: " + employee.id + ", Name: " + employee.name + ", Department: " + employee.department;
+                    $('#employees').append($('<li/>', { text: content }));
+                }).fail(function () {
+                    $('#employees').append($('<li/>', { text: "Employee not found (ID: " + id + ")" }));
+                });
+            });
+        });
+    </script>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <p>Hello, @User.Identity.Name!</p>
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+
+        <div class="text-center mt-3">
+            @* <h1 class="display-4">Welcome</h1>
+            <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+            <div>
+                <h1>
+                    Employees Listing
+                </h1>
+                <input id="search" type="button" value="Get" />
+            </div>
+
+            <div class="mt-3">
+                <h2>Find Employee by Id</h2>
+                <input id="employeeId" type="text" placeholder="Enter ID" />
+                <input id="searchById" type="button" value="Get Employee" />
+            </div>
+
+            <div class="mt-3">
+                <ul id="employees" />
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <p>You are not logged in.</p>
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
+    }
+</div>
