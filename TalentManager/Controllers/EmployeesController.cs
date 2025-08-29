@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TalentManager.Filters;
 using TalentManager.Models;
 
 namespace TalentManager.Controllers
 {
     [ApiController]
+    [ConcurrencyChecker]
     [Route("api/[controller]")]
     [Authorize]
     public class EmployeesController : Controller
@@ -44,6 +46,12 @@ namespace TalentManager.Controllers
                 Name = "Mario M Mario",
                 Department = "Plumbing"
             };
+        }
+
+        [HttpPut]
+        public IActionResult Put(Employee employee, [FromHeader(Name = "If-Match")] string ifMatch = "")
+        {
+            return Ok();
         }
     }
 }
