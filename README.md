@@ -10,6 +10,7 @@ Shows basic controller setup, cookie-based authentication, and Swagger integrati
 - **API Endpoints**
   - `GET /api/employees` → Returns all employees
   - `GET /api/employees/{id}` → Returns a single employee
+  - `PUT /api/employees` -> Dummy endpoint for ETag Concurrency testing
 - **Authentication**
   - Cookie authentication middleware
   - Demo login: user is authenticated if `userId == password`
@@ -48,7 +49,11 @@ info: Microsoft.Hosting.Lifetime[14]
    Now listening on: http://localhost:5160
 ```
 
-3. Add /swagger to the end of the endpoint to view Swagger UI
+3. For ETag testing in Swagger:
+  - After logging in, access either GET employees endpoint.
+  - Copy ETag in response and use for PUT endpoint.
+  - Try using the same ETag again -> Should result in "Precondition Failed"
+  - In a prod/real environment, this would mean the resourse ur trying to update has already been changed.
 
 
 For laters:
