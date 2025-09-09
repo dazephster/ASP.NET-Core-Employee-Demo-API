@@ -10,7 +10,8 @@ Shows basic controller setup, cookie-based authentication, and Swagger integrati
 - **API Endpoints**
   - `GET /api/employees` → Returns all employees
   - `GET /api/employees/{id}` → Returns a single employee
-  - `PUT /api/employees` -> Dummy endpoint for ETag Concurrency testing
+  - `PUT /api/employees` → Dummy endpoint for ETag Concurrency testing
+  - `DELETE /api/employees/{id}` → Delete employee by Id
 - **Authentication**
   - Cookie authentication middleware
   - Demo login: user is authenticated if `userId == password`
@@ -55,6 +56,11 @@ info: Microsoft.Hosting.Lifetime[14]
   - Try using the same ETag again -> Should result in "Precondition Failed"
   - In a prod/real environment, this would mean the resourse ur trying to update has already been changed.
 
+4. For CBAC testing on Delete Endpoint:
+   - Rules for deletion are user must have "HR Manager" role (default), and must be in same department and country as user to be deleted
+   - User has department = "IT" and country = "USA"
+   - Deleting Employee "Delete Test" will work with rules
+   - Other employees and invalid ids will return errors
 
 For laters:
 - Replace dummy login with ASP.NET Core Identity
