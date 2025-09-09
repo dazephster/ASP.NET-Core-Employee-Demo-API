@@ -19,7 +19,10 @@ namespace TalentManager.Controllers
             {
                 var claims = new List<Claim>
                 {
-                    new Claim (ClaimTypes.Name, userId)
+                    new Claim (ClaimTypes.Name, userId),
+                    new Claim(ClaimTypes.Role, "Human Resources Manager"),
+                    new Claim("Department", "IT"),
+                    new Claim("Country", "USA"),
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

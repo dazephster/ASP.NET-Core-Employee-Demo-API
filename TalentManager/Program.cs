@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
+using TalentManager.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +12,13 @@ builder.Services.AddAuthentication("Cookies")
         options.LoginPath = "/account/login";   // redirect when not logged in
         options.LogoutPath = "/account/logout";
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CanDeleteEmployee", policy =>
+        policy.Requirements.Add(new CanDeleteEmployeeRequirement()));
+});
+builder.Services.AddSingleton<IAuthorizationHandler, CanDeleteEmployeeHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

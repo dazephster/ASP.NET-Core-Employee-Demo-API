@@ -16,7 +16,7 @@
                 $.getJSON("/api/employees", function (data) {
                     $.each(data, function (i, employee) {
                         var content = "Id: " + employee.id + ", Name: " + employee.name;
-                        content = content + ", Department: " + employee.department;
+                        content = content + ", Department: " + employee.department + ", Country: " + employee.country;
 
                         $('#employees').append($('<li/>', {text: content}));
                     });
@@ -34,7 +34,7 @@
                 $('#employees').empty();
 
                 $.getJSON("/api/employees/" + id, function (employee) {
-                    var content = "Id: " + employee.id + ", Name: " + employee.name + ", Department: " + employee.department;
+                    var content = "Id: " + employee.id + ", Name: " + employee.name + ", Department: " + employee.department + ", Country: " + employee.country;
                     $('#employees').append($('<li/>', { text: content }));
                 }).fail(function () {
                     $('#employees').append($('<li/>', { text: "Employee not found (ID: " + id + ")" }));
@@ -44,6 +44,36 @@
             $('#swag').click(function () {
                 window.open(window.location.origin + "/swagger/", "_blank");
             });
+
+            // Delete employee by ID
+            $('#deleteById').click(function () {
+                var id = $('#deleteId').val().trim();
+                if (!id) {
+                    alert("Please enter an ID");
+                    return;
+                }
+
+                $('#deleteMessage').empty();
+
+                $.ajax({
+                    url: "/api/employees/" + id,
+                    type: "DELETE",
+                    success: function (result) {
+                        $('#deleteMessage').append($('<li/>', { text: result }));
+                        $('#employees').empty();
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 403) {
+                            $('#deleteMessage').append($('<li/>', { text: "Forbidden: You don't have permission to delete this employee." }));
+                        } else if (xhr.status === 404) {
+                            $('#deleteMessage').append($('<li/>', { text: "Employee not found." }));
+                        } else {
+                            $('#deleteMessage').append($('<li/>', { text: "Error: " + xhr.status }));
+                        }
+                    }
+                });
+            });
+
         });
     </script>
 }
@@ -76,6 +106,13 @@
 
             <div class="mt-3">
                 <ul id="employees" />
+            </div>
+
+            <div class="mt-3">
+                <h2>Delete Employee by Id</h2>
+                <input id="deleteId" type="text" placeholder="Enter ID" />
+                <input id="deleteById" type="button" value="Delete Employee" style="color:white; background-color:red;" />
+                <ul id="deleteMessage"/>
             </div>
 
             <div class="mt-3">
